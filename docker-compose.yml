@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+    search-api:
+        build: .
+        ports:
+            - "3000:3000"
+        volumes:
+            - .:/usr/app
+        command: npm run dev

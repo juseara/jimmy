@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+    search-api:
+        build: 
+            context: .
+            dockerfile: Dockerfile.dev
+        command: npm run dev
+        ports:
+            - "3000:3000"
+        volumes:
+            - .:/usr/app
+        

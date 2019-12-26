@@ -1,42 +1,69 @@
 import _ from 'lodash';
 import path from 'path';
-import Promise from 'bluebird';
 import express from 'express';
+import Promise from 'bluebird';
+import LoggerAdapter from 'jimmy/adapters/logger';
+import ComponentsAdapter from 'jimmy/adapters/components'
 
+const Logger = LoggerAdapter.createLogger({ name: 'INITIALIZER' });
 
 export default {
-    config:{},
-    handlers:{},
-    responders:{},
-    initialize(){
+    config: {},
+    handlers: {},
+    responders: {},
+    initialize() {
         this.loadConfigs();
+        return this.loadAdapters();
     },
-    loadConfigs(){
-        
+    loadConfigs() {
+        Logger.info('Loading confings.');
+
+        const defaultConfig = require(path.join(process.cwd(), 'config', 'default')).default;
+
+        const envConfig = require(path.join(process.cwd(), 'config', process.env.NODE_ENV || 'default')).default
+
+        const mergeConfig = { ...defaultConfig, ...envConfig };
+
+        this.config = { ...this.config, ...mergeConfig };
+
+        Logger.info('All confings loaded successfully.');
     },
-    loadAdapters(){
+    loadAdapters() {
         return Promise.bind(this)
-        .then(_ => {
-            
-        })
+            .then(_ => {
+                return Logger.info('Loading adapters.')
+            })
+            .then(_ => {
+                Logger.info('Loading logger adapter.')
+                return LoggerAdapter.initialize();
+            })
+            .then(_ => {
+                Logger.info('Loading components adapter.');
+                return ComponentsAdapter.initialize(this.responders);
+            }).then(_ => {
+                return Logger.info('All adapters loaded successfully.');
+            });
+    },
+    when(event, handler) {
+        if (!this.handlers[event]) {
+            this.handlers[event] = []
+        }
+        this.handlers[event].push(handler);
+    },
+
+    invokeHandlers(event) {
+        return Promise.each(this.handlers[event] || [], handler => {
+            return new Promise(resolve => {
+                let result = handler(resolve);
+
+                if (result && result.then) {
+                    result.then(resolve, resolve);
+                }
+            });
+        });
+    },
+
+    teardown() {
+        return invokeHandlers('teardown');
     }
 }
-
-const app = express();
-
-const port  = 3000;
-
-app.get("/",(req,res,next)=>{
-    res.send("TESTE 20")
-})
-
-
-app.get("/error",(req,res,next)=>{
-    res.send(new NotFoundError("user jasilva17"))
-})
-
-app.listen(port,()=>{
-    console.log(`Started in port ${port}`);    
-});
-
-export default app;

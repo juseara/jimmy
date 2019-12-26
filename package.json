@@ -5,21 +5,25 @@
   "main": "src/bin/server.js",
   "scripts": {
     "clean": "rimraf dist",
-    "dev": "nodemon --watch src --exec \"babel-node ./src/bin/server.js --presets env\"",
-    "build": "npm run clean && babel src -s -D -d dist --presets env",
+    "dev": "nodemon --exec babel-node ./src/bin/server.js",
+    "build": "npm run clean && babel src -s -D -d dist",
     "start": "npm run build && node dist/bin/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
+    "@babel/cli": "^7.7.7",
+    "@babel/core": "^7.7.7",
+    "@babel/node": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "babel-jest": "^24.9.0",
     "dotenv": "^8.2.0",
     "nodemon": "^2.0.2",
     "rimraf": "^3.0.0"
   },
   "dependencies": {
+    "babel-plugin-inline-dotenv": "^1.5.0",
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
     "bunyan": "^1.8.12",

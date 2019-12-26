@@ -23,12 +23,13 @@ export default (application) => {
     return Promise.resolve()
     .then(_ =>{
         Logger.info("Starting initializer.");
+        return application.initialize()
     })
     .then(_ =>{
         Logger.info("Starting server.")
         return server.run();
     })
-    .then(Logger.info(`Listening on port ${program.port} successfully`))
+    .then(_=>Logger.info(`Listening on port ${program.port} successfully`))
     .catch(error =>{
         Logger.error(error.stack);
         Logger.error({ err:error });

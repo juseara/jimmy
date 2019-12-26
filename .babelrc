@@ -1,9 +1,15 @@
 {
     "presets": [
-        ["env",{
-            "targets":{
-                "node":"current"
-            }
-        }]
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": true
+          }
+        }
+      ]
+    ],
+    "plugins": [
+      "inline-dotenv"
     ]
-}
+  }

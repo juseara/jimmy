@@ -21,6 +21,8 @@ export default class Application{
         this.router = express();
         Logger.info('Configuring middlewares.');
         this.configureMiddlewares();
+        Logger.info('Loading custom middlewares.');
+        this.registerMiddlewares();
         Logger.info('Loading endpoints.');
         this.registerEndpoints();
         // 404 handler
@@ -38,6 +40,14 @@ export default class Application{
 
     initialize(){
         return Jimmy.initialize();
+    }
+
+    registerMiddlewares(){
+
+    }
+
+    registerMiddleware(middleware){
+        this.router.use(middleware);
     }
 
     registerEndpoints(){

@@ -18,9 +18,10 @@ export default {
     loadConfigs() {
         Logger.info('Loading confings.');
 
-        const defaultConfig = require(path.join(process.cwd(), 'config', 'default')).default;
+        const defaultConfig = require(path.join(process.cwd(), 'config', 'default.json'));
+        console.log('REQUIRE',path.join(process.cwd(), 'config', 'default'))
 
-        const envConfig = require(path.join(process.cwd(), 'config', process.env.NODE_ENV || 'default')).default
+        const envConfig = require(path.join(process.cwd(), 'config', process.env.NODE_ENV? `${process.env.NODE_ENV}.json` : 'default.json'))
 
         const mergeConfig = { ...defaultConfig, ...envConfig };
 
